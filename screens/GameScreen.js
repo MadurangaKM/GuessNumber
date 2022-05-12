@@ -5,8 +5,10 @@ import PrimaryButton from "../common-components/PrimaryButton";
 import Card from "../common-components/Card";
 import { showMessage } from "react-native-flash-message";
 import { GlobalStyle } from "../constants/GlobleStyle";
+import { useSelector } from "react-redux";
 const GameScreen = (props) => {
   const [playRounded, setPlayRounded] = useState(0);
+  const mode = useSelector((state) => state.DarkLightModeChangerData.darkMode);
   const generateRandomBetween = (min, max, exclude) => {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -44,9 +46,6 @@ const GameScreen = (props) => {
       currentHigh.current,
       currentGuess
     );
-    console.log("Current min", currentLow.current);
-    console.log("Current max", currentHigh.current);
-    console.log("Current Guess", currentGuess);
     setCurrentGuess(nextNumber);
     setPlayRounded(playRounded + 1);
   };
@@ -56,10 +55,46 @@ const GameScreen = (props) => {
       props.onGameOver(playRounded, currentGuess);
     }
   }, [currentGuess]);
+  const styles = StyleSheet.create({
+    screen: {
+      padding: 30,
+      paddingTop: 0,
+      flex: 1,
+      alignItems: "center",
+      backgroundColor: mode
+        ? Colors.backgroundColorDark
+        : Colors.backgroundColor,
+    },
+    cardEnterted: {
+      padding: 20,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    numberStyle: {
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: 5,
+      color: mode ? Colors.primaryDark : Colors.primary,
+      borderWidth: 1,
+      borderColor: mode ? Colors.primaryDark : Colors.primary,
+      borderRadius: 10,
+      paddingHorizontal: 8,
+      marginTop: 10,
+      marginBottom: 15,
+      paddingTop: Platform.OS === "android" ? 15 : 0,
+    },
+  });
   return (
     <View style={styles.screen}>
       <Card style={styles.cardEnterted}>
-        <Text style={GlobalStyle.BodyOne}>Our Guess</Text>
+        <Text
+          style={{
+            ...GlobalStyle.BodyOne,
+            color: mode ? Colors.drakNormalTextColor : Colors.titleTextColor,
+          }}
+        >
+          Our Guess
+        </Text>
         <Text style={{ ...styles.numberStyle, ...GlobalStyle.Display }}>
           {currentGuess}
         </Text>
@@ -85,31 +120,4 @@ const GameScreen = (props) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  screen: {
-    padding: 30,
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: Colors.backgroundColor,
-  },
-  cardEnterted: {
-    padding: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  numberStyle: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 5,
-    color: Colors.primary,
-    borderWidth: 1,
-    borderColor: Colors.primary,
-    borderRadius: 10,
-    paddingHorizontal: 8,
-    marginTop: 10,
-    marginBottom: 15,
-    paddingTop: Platform.OS === "android" ? 15 : 0,
-  },
-});
 export default GameScreen;

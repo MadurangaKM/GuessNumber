@@ -8,6 +8,9 @@ import GameOverScreen from "./screens/GameOverScreen";
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 import { showMessage } from "react-native-flash-message";
+import { Provider } from "react-redux";
+import Store from "./store/Main";
+import DarkLightModeChanger from "./screens/DarkLightModeChanger";
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -19,14 +22,12 @@ const fetchFonts = () => {
     "poppins-regular": require("./assets/fonts/Poppins-Regular.otf"),
   });
 };
-
 export default function App() {
   const [enteredValue, setEnteredValue] = useState();
   const [playRounded, setPlayRounded] = useState();
   const [isGameOver, setIsGameOver] = useState(false);
   const [winningGuess, setWinningGuess] = useState();
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-
   if (!isDataLoaded) {
     return (
       <AppLoading
@@ -57,23 +58,29 @@ export default function App() {
     setWinningGuess();
   };
   return (
-    <View style={styles.screen}>
-      <Header title={"Guess A Number"} />
-      {enteredValue ? (
-        isGameOver ? (
-          <GameOverScreen
-            playRounded={playRounded}
-            winningGuess={winningGuess}
-            newGameHandler={newGameHandler}
-          />
+    <Provider store={Store}>
+      <View style={styles.screen}>
+        <Header title={"Guess A Number"} />
+        <DarkLightModeChanger />
+        {enteredValue ? (
+          isGameOver ? (
+            <GameOverScreen
+              playRounded={playRounded}
+              winningGuess={winningGuess}
+              newGameHandler={newGameHandler}
+            />
+          ) : (
+            <GameScreen
+              userChoice={enteredValue}
+              onGameOver={gameOverHandler}
+            />
+          )
         ) : (
-          <GameScreen userChoice={enteredValue} onGameOver={gameOverHandler} />
-        )
-      ) : (
-        <StartGameScreen onSubmitClick={handleSubmit} />
-      )}
-      <FlashMessage position="top" statusBarHeight={50} icon={"auto"} />
-    </View>
+          <StartGameScreen onSubmitClick={handleSubmit} />
+        )}
+        <FlashMessage position="top" statusBarHeight={50} icon={"auto"} />
+      </View>
+    </Provider>
   );
 }
 

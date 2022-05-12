@@ -1,8 +1,9 @@
 import { TextInput, StyleSheet, View, Text } from "react-native";
 import Colors from "../constants/Color";
 import { GlobalStyle } from "../constants/GlobleStyle";
-
+import { useSelector } from "react-redux";
 const TextInputField = (props) => {
+  const mode = useSelector((state) => state.DarkLightModeChangerData.darkMode);
   const styles = StyleSheet.create({
     textInput: {
       borderColor: props.error ? Colors.errorColor : Colors.borderColor,
@@ -24,6 +25,10 @@ const TextInputField = (props) => {
         value={props.value}
         onSubmitEditing={props.onSubmitEditing}
         {...props}
+        placeholderTextColor={
+          mode ? Colors.drakNormalTextColor : Colors.normalTextColor
+        }
+        color={mode ? Colors.drakNormalTextColor : Colors.normalTextColor}
       />
       <Text
         style={{

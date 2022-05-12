@@ -1,5 +1,4 @@
 import { StyleSheet } from "react-native";
-
 export const GlobalStyle = StyleSheet.create({
   ButtonText: {
     fontFamily: "poppins-medium",
@@ -7,6 +6,10 @@ export const GlobalStyle = StyleSheet.create({
   },
   BodyOne: {
     fontFamily: "poppins-light",
+    fontSize: 15,
+  },
+  BodyOneBold: {
+    fontFamily: "poppins-bold",
     fontSize: 15,
   },
   BodyTwo: {
@@ -21,4 +24,6 @@ export const GlobalStyle = StyleSheet.create({
     fontFamily: "poppins-medium",
     fontSize: 50,
   },
+  primary: "#4e54c8",
+  backgroundColor: "#FAFBFF",
 });

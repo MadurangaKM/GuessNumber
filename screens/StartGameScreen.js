@@ -15,10 +15,11 @@ import Colors from "../constants/Color";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { GlobalStyle } from "../constants/GlobleStyle";
-
+import { useSelector } from "react-redux";
 const StartGameScreen = (props) => {
   const [submitPress, setSubmitPress] = useState(false);
   const [enteredValue, setEnteredValue] = useState("");
+  const mode = useSelector((state) => state.DarkLightModeChangerData.darkMode);
   const formik = useFormik({
     initialValues: {
       guessNumber: "",
@@ -52,6 +53,41 @@ const StartGameScreen = (props) => {
     setSubmitPress(false);
     Keyboard.dismiss();
   };
+  const styles = StyleSheet.create({
+    screen: {
+      padding: 30,
+      paddingTop: 0,
+      flex: 1,
+      alignItems: "center",
+      backgroundColor: mode
+        ? Colors.backgroundColorDark
+        : Colors.backgroundColor,
+    },
+    buttonContainer: {
+      justifyContent: "flex-end",
+      flexDirection: "row",
+      marginTop: 4,
+    },
+    card: {
+      padding: 20,
+    },
+    cardEnterted: {
+      padding: 20,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    numberStyle: {
+      marginBottom: 5,
+      color: mode ? Colors.primaryDark : Colors.primary,
+      borderWidth: 1,
+      borderColor: mode ? Colors.primaryDark : Colors.primary,
+      borderRadius: 10,
+      paddingHorizontal: 8,
+      marginTop: 10,
+      marginBottom: 15,
+      paddingTop: Platform.OS === "android" ? 15 : 0,
+    },
+  });
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -77,7 +113,16 @@ const StartGameScreen = (props) => {
         </Card>
         {submitPress && (
           <Card style={styles.cardEnterted}>
-            <Text style={GlobalStyle.BodyOne}>Your Entered</Text>
+            <Text
+              style={{
+                ...GlobalStyle.BodyOne,
+                color: mode
+                  ? Colors.drakNormalTextColor
+                  : Colors.titleTextColor,
+              }}
+            >
+              Your Entered
+            </Text>
             <Text style={{ ...styles.numberStyle, ...GlobalStyle.Display }}>
               {enteredValue}
             </Text>
@@ -91,37 +136,4 @@ const StartGameScreen = (props) => {
     </TouchableWithoutFeedback>
   );
 };
-
-const styles = StyleSheet.create({
-  screen: {
-    padding: 30,
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: Colors.backgroundColor,
-  },
-  buttonContainer: {
-    justifyContent: "flex-end",
-    flexDirection: "row",
-    marginTop: 4,
-  },
-  card: {
-    padding: 20,
-  },
-  cardEnterted: {
-    padding: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  numberStyle: {
-    marginBottom: 5,
-    color: Colors.primary,
-    borderWidth: 1,
-    borderColor: Colors.primary,
-    borderRadius: 10,
-    paddingHorizontal: 8,
-    marginTop: 10,
-    marginBottom: 15,
-    paddingTop: Platform.OS === "android" ? 15 : 0,
-  },
-});
 export default StartGameScreen;

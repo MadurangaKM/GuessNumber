@@ -1,13 +1,14 @@
 import { StyleSheet, Text, TouchableOpacity, Platform } from "react-native";
 import Colors from "../constants/Color";
 import { GlobalStyle } from "../constants/GlobleStyle";
-
+import { useSelector } from "react-redux";
 const Button = (props) => {
+  const mode = useSelector((state) => state.DarkLightModeChangerData.darkMode);
   return (
     <TouchableOpacity onPress={props.onPress} style={styles.button}>
       <Text
         style={{
-          color: Colors.primary,
+          color: mode ? Colors.primaryDark : Colors.primary,
           paddingTop: Platform.OS === "android" ? 3 : 0,
           ...GlobalStyle.ButtonText,
         }}
