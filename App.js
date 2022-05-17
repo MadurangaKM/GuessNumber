@@ -12,7 +12,6 @@ import { Provider } from "react-redux";
 import Store from "./store/Main";
 import DarkLightModeChanger from "./screens/DarkLightModeChanger";
 import PaddingView from "./common-components/PaddingView";
-import { GlobalStyle } from "../constants/GlobleStyle";
 const fetchFonts = () => {
   return Font.loadAsync({
     "poppins-bold": require("./assets/fonts/Poppins-Bold.otf"),
