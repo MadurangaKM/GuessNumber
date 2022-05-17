@@ -1,14 +1,20 @@
 import { useState, useRef, useEffect } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, FlatList } from "react-native";
 import Colors from "../constants/Color";
 import PrimaryButton from "../common-components/PrimaryButton";
 import Card from "../common-components/Card";
 import { showMessage } from "react-native-flash-message";
 import { GlobalStyle } from "../constants/GlobleStyle";
 import { useSelector } from "react-redux";
+import ScreenData from "../common-components/ScreenData";
+import VirtualizedView from "../common-components/VirtualizedView";
+
 const GameScreen = (props) => {
   const [playRounded, setPlayRounded] = useState(0);
+  const [previousGuesses, setPreviousGuess] = useState([]);
+  const screenData = ScreenData();
   const mode = useSelector((state) => state.DarkLightModeChangerData.darkMode);
+
   const generateRandomBetween = (min, max, exclude) => {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -48,6 +54,16 @@ const GameScreen = (props) => {
     );
     setCurrentGuess(nextNumber);
     setPlayRounded(playRounded + 1);
+    if (previousGuesses.length === 0) {
+      setPreviousGuess([
+        { playRounded: playRounded + 1, previousGuessIs: currentGuess },
+      ]);
+    } else {
+      previousGuesses.push({
+        playRounded: playRounded + 1,
+        previousGuessIs: currentGuess,
+      });
+    }
   };
 
   useEffect(() => {
@@ -59,16 +75,18 @@ const GameScreen = (props) => {
     screen: {
       padding: 30,
       paddingTop: 0,
+      paddingHorizontal:screenData.isLandscape?60:30,
       flex: 1,
-      alignItems: "center",
+      // alignItems: "center",
       backgroundColor: mode
         ? Colors.backgroundColorDark
         : Colors.backgroundColor,
     },
     cardEnterted: {
-      padding: 20,
+      paddingVertical:15,
       justifyContent: "center",
       alignItems: "center",
+
     },
     numberStyle: {
       justifyContent: "center",
@@ -83,9 +101,17 @@ const GameScreen = (props) => {
       marginBottom: 15,
       paddingTop: Platform.OS === "android" ? 15 : 0,
     },
+    previousGuess: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      height: 48,
+      justifyContent: "space-evenly",
+    },
   });
+  console.log("Check Screen Orientation Game Screen",screenData.isLandscape)
   return (
-    <View style={styles.screen}>
+    <VirtualizedView style={styles.screen}>
       <Card style={styles.cardEnterted}>
         <Text
           style={{
@@ -107,17 +133,70 @@ const GameScreen = (props) => {
         >
           <PrimaryButton
             title="Lower"
-            style={{ marginRight: 5 }}
+            // style={{ margin: 4,}}
             onPress={nextGuessHandler.bind(this, "lower")}
+            isIcon={true}
+            iconName="remove-circle-outline"
           />
           <PrimaryButton
             title="Greater"
-            style={{ marginLeft: 5 }}
+            style={{ marginLeft: 10}}
             onPress={nextGuessHandler.bind(this, "greater")}
+            isIcon={true}
+            iconName="add-circle-outline"
           />
         </View>
       </Card>
-    </View>
+      <FlatList
+        data={previousGuesses.sort((a, b) => {
+          return b.playRounded - a.playRounded;
+        })}
+        showsVerticalScrollIndicator={false}
+        renderItem={(itemData) => (
+          <Card style={styles.previousGuess}>
+            <Text
+              style={{
+                ...GlobalStyle.BodyOne,
+                color: mode
+                  ? Colors.drakNormalTextColor
+                  : Colors.titleTextColor,
+              }}
+            >
+              Play Round:{" "}
+              <Text
+                style={{
+                  ...GlobalStyle.BodyOneBold,
+                  color: mode ? Colors.primaryDark : Colors.primary,
+                }}
+              >
+                {" "}
+                {itemData.item.playRounded}
+              </Text>
+            </Text>
+            <Text
+              style={{
+                ...GlobalStyle.BodyOne,
+                color: mode
+                  ? Colors.drakNormalTextColor
+                  : Colors.titleTextColor,
+              }}
+            >
+              Guess:{" "}
+              <Text
+                style={{
+                  ...GlobalStyle.BodyOneBold,
+                  color: mode ? Colors.primaryDark : Colors.primary,
+                }}
+              >
+                {" "}
+                {itemData.item.previousGuessIs}
+              </Text>
+            </Text>
+          </Card>
+        )}
+        keyExtractor={(item, index) => index}
+      />
+    </VirtualizedView>
   );
 };
 export default GameScreen;

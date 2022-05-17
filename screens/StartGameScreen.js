@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState} from "react";
 import {
   StyleSheet,
   View,
@@ -6,6 +6,8 @@ import {
   Keyboard,
   Text,
   Platform,
+  ScrollView,
+  KeyboardAvoidingView,
 } from "react-native";
 import TextInputField from "../common-components/TextInput";
 import PrimaryButton from "../common-components/PrimaryButton";
@@ -16,10 +18,13 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { GlobalStyle } from "../constants/GlobleStyle";
 import { useSelector } from "react-redux";
+import ScreenData from "../common-components/ScreenData";
+
 const StartGameScreen = (props) => {
   const [submitPress, setSubmitPress] = useState(false);
   const [enteredValue, setEnteredValue] = useState("");
   const mode = useSelector((state) => state.DarkLightModeChangerData.darkMode);
+  const screenData = ScreenData();
   const formik = useFormik({
     initialValues: {
       guessNumber: "",
@@ -56,9 +61,10 @@ const StartGameScreen = (props) => {
   const styles = StyleSheet.create({
     screen: {
       padding: 30,
+      paddingHorizontal:screenData.isLandscape?60:30,
       paddingTop: 0,
       flex: 1,
-      alignItems: "center",
+      // alignItems: "center",
       backgroundColor: mode
         ? Colors.backgroundColorDark
         : Colors.backgroundColor,
@@ -88,13 +94,15 @@ const StartGameScreen = (props) => {
       paddingTop: Platform.OS === "android" ? 15 : 0,
     },
   });
+  console.log("Check Screen Orientation Start Game Screen",screenData.isLandscape)
   return (
     <TouchableWithoutFeedback
       onPress={() => {
         Keyboard.dismiss();
       }}
     >
-      <View style={styles.screen}>
+      <ScrollView style={styles.screen}>
+        <KeyboardAvoidingView behavior="position">
         <Card style={styles.card}>
           <TextInputField
             id="guessNumber"
@@ -105,6 +113,7 @@ const StartGameScreen = (props) => {
             onChangeText={handleInputChange}
             error={Boolean(formik.errors.guessNumber)}
             errorMessage={formik.errors.guessNumber}
+            onSubmitEditing={formik.handleSubmit}
           />
           <View style={styles.buttonContainer}>
             <SecondaryButton title="Reset" onPress={handleReset} />
@@ -132,7 +141,8 @@ const StartGameScreen = (props) => {
             />
           </Card>
         )}
-      </View>
+        </KeyboardAvoidingView>
+      </ScrollView>
     </TouchableWithoutFeedback>
   );
 };
