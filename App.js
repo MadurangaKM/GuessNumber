@@ -11,7 +11,8 @@ import { showMessage } from "react-native-flash-message";
 import { Provider } from "react-redux";
 import Store from "./store/Main";
 import DarkLightModeChanger from "./screens/DarkLightModeChanger";
-
+import PaddingView from "./common-components/PaddingView";
+import { GlobalStyle } from "../constants/GlobleStyle";
 const fetchFonts = () => {
   return Font.loadAsync({
     "poppins-bold": require("./assets/fonts/Poppins-Bold.otf"),
@@ -62,23 +63,30 @@ export default function App() {
       <View style={styles.screen}>
         <Header title={"Guess A Number"} />
         <DarkLightModeChanger />
-        {enteredValue ? (
-          isGameOver ? (
-            <GameOverScreen
-              playRounded={playRounded}
-              winningGuess={winningGuess}
-              newGameHandler={newGameHandler}
-            />
+        <PaddingView>
+          {enteredValue ? (
+            isGameOver ? (
+              <GameOverScreen
+                playRounded={playRounded}
+                winningGuess={winningGuess}
+                newGameHandler={newGameHandler}
+              />
+            ) : (
+              <GameScreen
+                userChoice={enteredValue}
+                onGameOver={gameOverHandler}
+              />
+            )
           ) : (
-            <GameScreen
-              userChoice={enteredValue}
-              onGameOver={gameOverHandler}
-            />
-          )
-        ) : (
-          <StartGameScreen onSubmitClick={handleSubmit} />
-        )}
-        <FlashMessage position="top" statusBarHeight={50} icon={"auto"} />
+            <StartGameScreen onSubmitClick={handleSubmit} />
+          )}
+        </PaddingView>
+        <FlashMessage
+          position="bottom"
+          statusBarHeight={0}
+          icon={"auto"}
+          floating={true}
+        />
       </View>
     </Provider>
   );

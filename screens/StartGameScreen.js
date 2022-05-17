@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -18,13 +18,11 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { GlobalStyle } from "../constants/GlobleStyle";
 import { useSelector } from "react-redux";
-import ScreenData from "../common-components/ScreenData";
 
 const StartGameScreen = (props) => {
   const [submitPress, setSubmitPress] = useState(false);
   const [enteredValue, setEnteredValue] = useState("");
   const mode = useSelector((state) => state.DarkLightModeChangerData.darkMode);
-  const screenData = ScreenData();
   const formik = useFormik({
     initialValues: {
       guessNumber: "",
@@ -61,10 +59,8 @@ const StartGameScreen = (props) => {
   const styles = StyleSheet.create({
     screen: {
       padding: 30,
-      paddingHorizontal:screenData.isLandscape?60:30,
       paddingTop: 0,
       flex: 1,
-      // alignItems: "center",
       backgroundColor: mode
         ? Colors.backgroundColorDark
         : Colors.backgroundColor,
@@ -94,7 +90,6 @@ const StartGameScreen = (props) => {
       paddingTop: Platform.OS === "android" ? 15 : 0,
     },
   });
-  console.log("Check Screen Orientation Start Game Screen",screenData.isLandscape)
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -103,44 +98,44 @@ const StartGameScreen = (props) => {
     >
       <ScrollView style={styles.screen}>
         <KeyboardAvoidingView behavior="position">
-        <Card style={styles.card}>
-          <TextInputField
-            id="guessNumber"
-            name="guessNumber"
-            placeHolder="Type Your Number"
-            keyboardType="number-pad"
-            value={formik.values.guessNumber}
-            onChangeText={handleInputChange}
-            error={Boolean(formik.errors.guessNumber)}
-            errorMessage={formik.errors.guessNumber}
-            onSubmitEditing={formik.handleSubmit}
-          />
-          <View style={styles.buttonContainer}>
-            <SecondaryButton title="Reset" onPress={handleReset} />
-            <PrimaryButton title="Submit" onPress={formik.handleSubmit} />
-          </View>
-        </Card>
-        {submitPress && (
-          <Card style={styles.cardEnterted}>
-            <Text
-              style={{
-                ...GlobalStyle.BodyOne,
-                color: mode
-                  ? Colors.drakNormalTextColor
-                  : Colors.titleTextColor,
-              }}
-            >
-              Your Entered
-            </Text>
-            <Text style={{ ...styles.numberStyle, ...GlobalStyle.Display }}>
-              {enteredValue}
-            </Text>
-            <PrimaryButton
-              title="Start Game"
-              onPress={() => props.onSubmitClick(enteredValue)}
+          <Card style={styles.card}>
+            <TextInputField
+              id="guessNumber"
+              name="guessNumber"
+              placeHolder="Type Your Number"
+              keyboardType="number-pad"
+              value={formik.values.guessNumber}
+              onChangeText={handleInputChange}
+              error={Boolean(formik.errors.guessNumber)}
+              errorMessage={formik.errors.guessNumber}
+              onSubmitEditing={formik.handleSubmit}
             />
+            <View style={styles.buttonContainer}>
+              <SecondaryButton title="Reset" onPress={handleReset} />
+              <PrimaryButton title="Submit" onPress={formik.handleSubmit} />
+            </View>
           </Card>
-        )}
+          {submitPress && (
+            <Card style={styles.cardEnterted}>
+              <Text
+                style={{
+                  ...GlobalStyle.BodyOne,
+                  color: mode
+                    ? Colors.drakNormalTextColor
+                    : Colors.titleTextColor,
+                }}
+              >
+                Your Entered
+              </Text>
+              <Text style={{ ...styles.numberStyle, ...GlobalStyle.Display }}>
+                {enteredValue}
+              </Text>
+              <PrimaryButton
+                title="Start Game"
+                onPress={() => props.onSubmitClick(enteredValue)}
+              />
+            </Card>
+          )}
         </KeyboardAvoidingView>
       </ScrollView>
     </TouchableWithoutFeedback>

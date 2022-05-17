@@ -6,13 +6,11 @@ import Card from "../common-components/Card";
 import { showMessage } from "react-native-flash-message";
 import { GlobalStyle } from "../constants/GlobleStyle";
 import { useSelector } from "react-redux";
-import ScreenData from "../common-components/ScreenData";
 import VirtualizedView from "../common-components/VirtualizedView";
 
 const GameScreen = (props) => {
   const [playRounded, setPlayRounded] = useState(0);
   const [previousGuesses, setPreviousGuess] = useState([]);
-  const screenData = ScreenData();
   const mode = useSelector((state) => state.DarkLightModeChangerData.darkMode);
 
   const generateRandomBetween = (min, max, exclude) => {
@@ -75,18 +73,15 @@ const GameScreen = (props) => {
     screen: {
       padding: 30,
       paddingTop: 0,
-      paddingHorizontal:screenData.isLandscape?60:30,
       flex: 1,
-      // alignItems: "center",
       backgroundColor: mode
         ? Colors.backgroundColorDark
         : Colors.backgroundColor,
     },
     cardEnterted: {
-      paddingVertical:15,
+      paddingVertical: 15,
       justifyContent: "center",
       alignItems: "center",
-
     },
     numberStyle: {
       justifyContent: "center",
@@ -109,7 +104,6 @@ const GameScreen = (props) => {
       justifyContent: "space-evenly",
     },
   });
-  console.log("Check Screen Orientation Game Screen",screenData.isLandscape)
   return (
     <VirtualizedView style={styles.screen}>
       <Card style={styles.cardEnterted}>
@@ -140,7 +134,7 @@ const GameScreen = (props) => {
           />
           <PrimaryButton
             title="Greater"
-            style={{ marginLeft: 10}}
+            style={{ marginLeft: 10 }}
             onPress={nextGuessHandler.bind(this, "greater")}
             isIcon={true}
             iconName="add-circle-outline"
