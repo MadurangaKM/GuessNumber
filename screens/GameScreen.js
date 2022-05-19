@@ -35,7 +35,7 @@ const GameScreen = (props) => {
       (direction === "greater" && currentGuess > props.userChoice)
     ) {
       showMessage({
-        message: "Don't lie. You know that is wrong...",
+        message: "Don't lie. You know that is wrong",
         type: "danger",
       });
       return;
